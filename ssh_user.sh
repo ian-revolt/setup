@@ -6,9 +6,11 @@ if [ "$EUID" -ne 0 ]
 fi
 
 # Ask what the user name will be
+echo -------------------------------------
 echo Hello, what will the user name be?
 read varname
 # Check if user exists already
+echo
 echo "Checking to see if the user exists..."
 exists=$(grep -c "$varname" /etc/passwd)
 if [ $exists -gt 0 ]; then
@@ -18,13 +20,14 @@ if [ $exists -gt 0 ]; then
     exit
 fi
 echo
-echo "User name is good"
+echo "User name $varname is good"
 echo
 # Ask what the GitHub user name is
 echo Hello, what is the GitHub user name?
 read vargit
 echo
 echo "Checking $vargit to make sure GitHub keys are there..."
+echo
 if wget --spider https://gibhub.com/$vargit.keys 2>&1 | grep 'OK'; then
   echo "Key file is there, good to go!"
   else 
@@ -32,7 +35,7 @@ if wget --spider https://gibhub.com/$vargit.keys 2>&1 | grep 'OK'; then
 fi
 
 echo
-echo Adding the user now...
+echo "Adding the user now..."
 echo
 # add the new user account using the name provided above
 adduser --disabled-password --gecos "" $varname
@@ -59,7 +62,7 @@ fi
 #fi 
 
 # make the ssh directory under the users home folder
-echo Create .ssh directory and set permissions & Ownership
+echo "Create .ssh directory and set permissions & Ownership"
 echo
 mkdir /home/$varname/.ssh
 chmod 700 /home/$varname/.ssh
@@ -67,7 +70,8 @@ chown $varname:$varname /home/$varname/.ssh
 touch /home/$varname/.ssh/authorized_keys
 
 # add key to authorized_keys from GitHub account
-echo Import ssh key from GitHub account
+echo "Import ssh key from GitHub account"
+echo
 wget -O - https://github.com/$vargit.keys | sudo tee -a /home/$varname/.ssh/authorized_keys
 
 ## can also use the following but you have to uncomment the line below and comment out the one above ##
@@ -76,9 +80,10 @@ wget -O - https://github.com/$vargit.keys | sudo tee -a /home/$varname/.ssh/auth
 echo
 chmod 600 /home/$varname/.ssh/authorized_keys
 chown $varname:$varname /home/$varname/.ssh/authorized_keys
-echo Permissions and Ownership set for authorized_keys
+echo "Permissions and Ownership set for authorized_keys"
 echo
-echo Thanks! The user $varname is now setup.
+echo "Thanks! The user $varname is now setup."
+echo "The keys for GitHub account $vargit imported"
 echo
 
 
