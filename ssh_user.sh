@@ -8,9 +8,19 @@ fi
 # Ask what the user name will be
 echo Hello, what will the user name be?
 read varname
+# Check if user exists already
+exists=$(grep -c "$varname" /etc/passwd)
+if [ $exists > 0 ]; then
+    echo "The user $varname already exists"
+    echo "Check for a home directory and consider running the"
+    echo "the sh_add_githubkey.sh script"
+    exit
+fi
+
 # Ask what the GitHub user name is
 echo Hello, what is the GitHub user name?
 read vargit
+
 
 # add the new user account using the name provided above
 adduser --disabled-password --gecos "" $varname
