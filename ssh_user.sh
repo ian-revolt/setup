@@ -33,7 +33,7 @@ fi
   touch /home/$varname/.ssh/authorized_keys
 
   # add key to authorized_keys from GitHub account
-  wget -O https://github.com/$vargit.keys | sudo tee -a /home/$varname/.ssh/authorized_keys
+  wget -O - https://github.com/$vargit.keys | sudo tee -a /home/$varname/.ssh/authorized_keys
   
   ## can also use the following but you have to uncomment the line below and comment out the one above ##
   # import keys from github
@@ -41,6 +41,6 @@ fi
 
   chmod 600 /home/$varname/.ssh/authorized_keys
   chown $varname:$varname /home/$varname/.ssh/authorized_keys
-   echo Thanks! The user $varname is now setup.
+  echo Thanks! The user $varname is now setup.
 
 
