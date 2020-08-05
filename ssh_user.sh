@@ -26,7 +26,12 @@ read vargit
 adduser --disabled-password --gecos "" $varname
 usermod -aG sudo $varname
 # add user to sudoers
-sudo sh -c "echo '$varname ALL=NOPASSWD: ALL' >> /etc/sudoers"
+sudoexists=$(grep -c "$varname" /etc/sudoers)
+if [ $sudoexists -gt 0 ]; then
+    echo "The user $varname already exists in sudoers"
+    else
+    sudo sh -c "echo '$varname ALL=NOPASSWD: ALL' >> /etc/sudoers"
+fi
 
 # check if user home dir exists, create if it doesn'
 DIR="/home/$varname"
