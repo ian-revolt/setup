@@ -10,7 +10,7 @@ echo Hello, what will the user name be?
 read varname
 # Check if user exists already
 exists=$(grep -c "$varname" /etc/passwd)
-if [ $exists > 0 ]; then
+if [ $exists -gt 0 ]; then
     echo "The user $varname already exists"
     echo "Check for a home directory and consider running the"
     echo "the sh_add_githubkey.sh script"
