@@ -28,7 +28,8 @@ read vargit
 echo
 echo "Checking $vargit to make sure GitHub keys are there..."
 echo
-if wget --spider https://gibhub.com/$vargit.keys 2>&1 | grep 'OK'; then
+if wget -nv --spider https://github.com/"$vargit".keys 2>&1 | grep 'OK'; then
+  echo
   echo "Key file is there, good to go!"
   else 
   echo "Key file is missing for $vargit.  Please check it." && exit 1
@@ -41,7 +42,7 @@ echo
 adduser --disabled-password --gecos "" $varname
 usermod -aG sudo $varname
 # add user to sudoers
-echo "Checking for sudoers permisison"
+echo "Checking for sudoers permisison..."
 echo
 sudoexists=$(grep -c "$varname" /etc/sudoers)
 if [ $sudoexists -gt 0 ]; then
@@ -62,7 +63,7 @@ fi
 #fi 
 
 # make the ssh directory under the users home folder
-echo "Create .ssh directory and set permissions & Ownership"
+echo "Create .ssh directory and set permissions & ownership"
 echo
 mkdir /home/$varname/.ssh
 chmod 700 /home/$varname/.ssh
@@ -72,18 +73,20 @@ touch /home/$varname/.ssh/authorized_keys
 # add key to authorized_keys from GitHub account
 echo "Import ssh key from GitHub account"
 echo
-wget -O - https://github.com/$vargit.keys | sudo tee -a /home/$varname/.ssh/authorized_keys
-
+wget -nv -O - https://github.com/$vargit.keys | sudo tee -a /home/$varname/.ssh/authorized_keys
+echo
+echo "Key imported!"
 ## can also use the following but you have to uncomment the line below and comment out the one above ##
 # import keys from github
 #ssh-import-id-gh $vargit
 echo
 chmod 600 /home/$varname/.ssh/authorized_keys
 chown $varname:$varname /home/$varname/.ssh/authorized_keys
-echo "Permissions and Ownership set for authorized_keys"
+echo "Setting permissions and ownership for authorized_keys..."
 echo
-echo "Thanks! The user $varname is now setup."
-echo "The keys for GitHub account $vargit imported"
+echo "Thanks! The user $varname is now setup "
+echo "and keys for GitHub account $vargit imported"
 echo
+echo "Have a nice day!"
 
 
